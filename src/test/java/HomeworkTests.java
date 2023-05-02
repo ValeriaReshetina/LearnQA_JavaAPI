@@ -45,8 +45,8 @@ public class HomeworkTests {
                 .get( "https://playground.learnqa.ru/api/long_redirect")
                 .andReturn();
 
-        String location = response.getHeader("Location");
-        System.out.println("\n" + location);
+        String locationHeader = response.getHeader("Location");
+        System.out.println("\n" + locationHeader);
     }
 
     @Test
