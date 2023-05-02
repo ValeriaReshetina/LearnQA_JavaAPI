@@ -4,9 +4,6 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 
 public class HomeworkTests {
@@ -41,7 +38,15 @@ public class HomeworkTests {
 
     @Test
     public void testRedirectForEx6() {
+        Response response = RestAssured
+                .given()
+                .redirects()
+                .follow(false)
+                .get( "https://playground.learnqa.ru/api/long_redirect")
+                .andReturn();
 
+        String location = response.getHeader("Location");
+        System.out.println("\n" + location);
     }
 
     @Test

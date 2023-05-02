@@ -3,7 +3,6 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,7 +40,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    public void testRestAssured_4_JsonParsing() {
+    public void testRestAssured_4_jsonParsing() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "John");
 
@@ -56,7 +55,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    public void testRestAssured_5_JsonParsing() {
+    public void testRestAssured_5_jsonParsing() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "John");
 
@@ -71,7 +70,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    public void testRestAssured_6_JsonParsing() {
+    public void testRestAssured_6_jsonParsing() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "John");
 
@@ -90,7 +89,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    public void testRestAssured_7_JsonParsing() {
+    public void testRestAssured_7_jsonParsing() {
         Response response = RestAssured
                 .given()
                 .queryParam("param1", "value1")
@@ -101,7 +100,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    public void testRestAssured() {
+    public void testRestAssured_8_bodyMap() {
         Map<String, Object> body = new HashMap<>();
         body.put("param1", "value1");
         body.put("param2", "value2");
@@ -111,25 +110,21 @@ public class HelloWorldTest {
                 .post("https://playground.learnqa.ru/api/check_type")
                 .andReturn();
         response.print();
-
-        JsonPath jsonPath = response.jsonPath();
-        Object value = jsonPath.get("value");
-        if (value instanceof ArrayList){
-            ArrayList<String> list = (ArrayList<String>) value;
-        }
-
     }
 
     @Test
-    public void testRestAssured12() {
-        Integer number = 5;
-        String smth = String.valueOf(5);
-        Double smbd = Double.valueOf(smth);
-
-        Object number2 = 2;
-        int number2AsInteger = (Integer) 2;
-
-        Object number3 = (Integer) 5;
+    public void testRestAssured_9_redirects() {
+        Response response = RestAssured
+                .given()
+                .redirects()
+                .follow(true)
+                .when()
+                .get("https://playground.learnqa.ru/api/get_303")
+                .andReturn();
+        int statusCode = response.getStatusCode();
+        System.out.println(statusCode);
     }
+
+
 }
 
