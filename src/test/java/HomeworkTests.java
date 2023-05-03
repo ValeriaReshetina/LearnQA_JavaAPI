@@ -42,7 +42,7 @@ public class HomeworkTests {
                 .given()
                 .redirects()
                 .follow(false)
-                .get( "https://playground.learnqa.ru/api/long_redirect")
+                .get("https://playground.learnqa.ru/api/long_redirect")
                 .andReturn();
 
         String locationHeader = response.getHeader("Location");
@@ -51,7 +51,25 @@ public class HomeworkTests {
 
     @Test
     public void testLongRedirectForEx7() {
+        String urlForRedirect = "https://playground.learnqa.ru/api/long_redirect";
+        int statusCode = 0;
 
+        while (statusCode != 200) {
+            System.out.println("Url to call: " + urlForRedirect);
+
+            Response response = RestAssured
+                    .given()
+                    .redirects()
+                    .follow(false)
+                    .get(urlForRedirect)
+                    .andReturn();
+            urlForRedirect = response.getHeader("Location");
+
+            if (urlForRedirect == null) {
+                urlForRedirect = response.getHeader("X-Host");
+            }
+            statusCode = response.getStatusCode();
+        }
     }
 
     @Test
