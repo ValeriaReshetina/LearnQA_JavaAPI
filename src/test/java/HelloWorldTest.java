@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class HelloWorldTest {
 
     @Test
@@ -187,7 +190,7 @@ public class HelloWorldTest {
         System.out.println(responseHeaders);
 
         System.out.println("\nCookies:");
-        Map<String,String> responseCookies = response.getCookies();
+        Map<String, String> responseCookies = response.getCookies();
         System.out.println(responseCookies);
     }
 
@@ -218,7 +221,7 @@ public class HelloWorldTest {
                 .given()
                 .body(data)
                 .when()
-                .post( "https://playground.learnqa.ru/api/get_auth_cookie")
+                .post("https://playground.learnqa.ru/api/get_auth_cookie")
                 .andReturn();
 
         System.out.println("\n Response:");
@@ -241,12 +244,12 @@ public class HelloWorldTest {
                 .given()
                 .body(data)
                 .when()
-                .post( "https://playground.learnqa.ru/api/get_auth_cookie")
+                .post("https://playground.learnqa.ru/api/get_auth_cookie")
                 .andReturn();
 
         String responseCookie = responseForGet.getCookie("auth_cookie");
 
-        Map<String,String> cookies = new HashMap<>();
+        Map<String, String> cookies = new HashMap<>();
         if (responseCookie != null) {
             cookies.put("auth_cookie", responseCookie);
         }
@@ -259,6 +262,22 @@ public class HelloWorldTest {
                 .andReturn();
 
         responseForCheck.print();
+    }
+
+    @Test
+    public void testFor200_14() {
+        Response response = RestAssured
+                .get("https://playground.learnqa.ru/api/map")
+                .andReturn();
+        assertEquals(200, response.statusCode(), "Unexpected status code");
+    }
+
+    @Test
+    public void testFor404_15() {
+        Response response = RestAssured
+                .get("https://playground.learnqa.ru/api/map2")
+                .andReturn();
+        assertEquals(404, response.statusCode(), "Unexpected status code");
     }
 }
 

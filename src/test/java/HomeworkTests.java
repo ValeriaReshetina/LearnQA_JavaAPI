@@ -1,9 +1,12 @@
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class HomeworkTests {
@@ -55,7 +58,7 @@ public class HomeworkTests {
         int statusCode = 0;
 
         while (statusCode != 200) {
-            System.out.println("Url to call: " + urlForRedirect);
+            System.out.println("Url for redirect: " + urlForRedirect);
 
             Response response = RestAssured
                     .given()
@@ -73,9 +76,34 @@ public class HomeworkTests {
     }
 
     @Test
-    public void testTokensForEx8() {
+    public void testTokensForEx8() throws InterruptedException {
+        Response response = RestAssured
+                .given()
+                .get("https://playground.learnqa.ru/ajax/api/longtime_job")
+                .andReturn();
+        String token = response.jsonPath().getString("token");
 
+        response = RestAssured
+                .given()
+                .param("token", token)
+                .get("https://playground.learnqa.ru/ajax/api/longtime_job")
+                .andReturn();
+        String status = response.jsonPath().getString("status");
+        assertEquals("Job is NOT ready", status);
+        Thread.sleep(20000);
+
+        response = RestAssured
+                .given()
+                .param("token", token)
+                .get("https://playground.learnqa.ru/ajax/api/longtime_job")
+                .andReturn();
+        status = response.jsonPath().getString("status");
+        String result = response.jsonPath().getString("result");
+
+        assertEquals("Job is ready", status);
+        assertNotNull(result);
     }
+
 
     @Test
     public void testPasswordGuessingForEx9() {
