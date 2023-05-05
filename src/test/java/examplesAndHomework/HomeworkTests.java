@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasLength;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -161,5 +163,11 @@ public class HomeworkTests {
                 break;
             }
         }
+    }
+
+    @Test
+    public void testCheckingLengthOfStringForEx10() {
+        String myString = "Test for checking length of string";
+        assertThat(myString, hasLength(34));
     }
 }
