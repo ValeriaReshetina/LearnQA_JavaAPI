@@ -3,12 +3,10 @@ package examplesAndHomework;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasLength;
@@ -139,31 +137,55 @@ public class HomeworkTests {
                 "\tFootball\tpassword1\t000000\ttrustno1\tstarwars\tpassword1\ttrustno1\tqwerty123\t123qwe\n";
 
         mostCommonPasswords = mostCommonPasswords.replaceAll("\n", "");
-
         String[] words = mostCommonPasswords.split("\t");
 
         Set<String> mostCommonPasswordsSet = new HashSet<>();
-
         mostCommonPasswordsSet.addAll(Arrays.asList(words));
-        for (String password : mostCommonPasswordsSet) {
 
+        String realPassword = null;
+
+        for (String iteratedPassword : mostCommonPasswordsSet) {
             Response response = RestAssured
                     .given()
                     .param("login", "super_admin")
-                    .param("password", password)
-                    .post("https://playground.learnqa.ru/ajax/api/get_secret_password_homework");
-            System.out.println(password);
-            System.out.println(response.asString() + "\n");
+                    .param("password", iteratedPassword)
+                    .post("https://playground.learnqa.ru/ajax/api/get_secret_password_homework")
+                    .andReturn();
+            if (response.getStatusCode() == 500) {
+                continue;
+            }
+            Map<String, String> cookies = response.getCookies();
 
-            JsonPath jsonPath = response.jsonPath();
-            Object objectToCompare = jsonPath.get("equals");
-
-            if ((Boolean) objectToCompare == true) {
-                System.out.println("This password is correct: " + password);
+            response = RestAssured
+                    .given()
+                    .cookies(cookies)
+                    .get("https://playground.learnqa.ru/ajax/api/check_auth_cookie")
+                    .andReturn();
+            if (response.asString().contains("You are authorized")) {
+                realPassword = iteratedPassword;
                 break;
             }
         }
+        assertNotNull(realPassword);
+        System.out.println("Real password is: " + realPassword);
     }
+
+//        for (String password : mostCommonPasswordsSet) {
+//            Response response = RestAssured
+//                    .given()
+//                    .param("login", "super_admin")
+//                    .param("password", password)
+//                    .post("https://playground.learnqa.ru/ajax/api/get_secret_password_homework");
+//            System.out.println(password);
+//            System.out.println(response.asString() + "\n");
+//
+//            JsonPath jsonPath = response.jsonPath();
+//            Object objectToCompare = jsonPath.get("equals");
+//
+//            if ((Boolean) objectToCompare == true) {
+//                System.out.println("This password is correct: " + password);
+//                break;
+//            }
 
     @Test
     public void testCheckingLengthOfStringForEx10() {
