@@ -96,7 +96,7 @@ public class HomeworkTests {
                 .andReturn();
         String status = response.jsonPath().getString("status");
         assertEquals("Job is NOT ready", status);
-        Thread.sleep(20000);
+        Thread.sleep(18000);
 
         response = RestAssured
                 .given()
