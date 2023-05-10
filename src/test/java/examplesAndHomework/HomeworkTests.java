@@ -186,4 +186,15 @@ public class HomeworkTests {
 
         assertEquals("hw_value", cookies.get("HomeWork"));
     }
+
+    @Test
+    public void testRequestForHeaderMethodForEx12() {
+        Response response = RestAssured
+                .given()
+                .get("https://playground.learnqa.ru/api/homework_header")
+                .andReturn();
+        response.prettyPrint();
+
+        assertTrue(response.getHeader("x-secret-homework-header").contains("Some secret value"));
+    }
 }
