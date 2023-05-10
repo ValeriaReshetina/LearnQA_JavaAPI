@@ -172,8 +172,8 @@ public class HomeworkTests {
 
     @Test
     public void testCheckingLengthOfStringForEx10() {
-        String myString = "Test for checking length of string";
-        assertThat(myString, hasLength(34));
+        String testString = "123456789012345";
+        Assertions.assertTrue(testString.length() >= 15);
     }
 
     @Test
