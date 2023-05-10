@@ -170,23 +170,6 @@ public class HomeworkTests {
         System.out.println("Real password is: " + realPassword);
     }
 
-//        for (String password : mostCommonPasswordsSet) {
-//            Response response = RestAssured
-//                    .given()
-//                    .param("login", "super_admin")
-//                    .param("password", password)
-//                    .post("https://playground.learnqa.ru/ajax/api/get_secret_password_homework");
-//            System.out.println(password);
-//            System.out.println(response.asString() + "\n");
-//
-//            JsonPath jsonPath = response.jsonPath();
-//            Object objectToCompare = jsonPath.get("equals");
-//
-//            if ((Boolean) objectToCompare == true) {
-//                System.out.println("This password is correct: " + password);
-//                break;
-//            }
-
     @Test
     public void testCheckingLengthOfStringForEx10() {
         String myString = "Test for checking length of string";
