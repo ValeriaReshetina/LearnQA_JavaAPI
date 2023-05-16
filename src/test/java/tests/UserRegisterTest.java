@@ -140,4 +140,28 @@ public class UserRegisterTest extends BaseTestCase {
         Assertions.assertResponseCodeEquals(response, 400);
         Assertions.assertResponseTextEquals(response, "The value of 'email' field is too long");
     }
+
+    @Description("This test login with one user, but receives data from another")
+    @Test
+    public void testRequestOfAnotherUserDataForEx16() {
+        Map<String, String> authData = new HashMap<>();
+        authData.put("email", "vinkotov@example.com");
+        authData.put("password", "1234");
+        String id = "1";
+
+        Response responseAuth = apiCoreRequests
+                .makePostRequest("https://playground.learnqa.ru/api/user/login", authData);
+
+        assertResponseCodeEquals(responseAuth, 200);
+        assertJsonByName(responseAuth, "user_id", 2);
+
+        Response responseUserData = apiCoreRequests
+                .makeGetRequestWithoutTokenAndCookie("https://playground.learnqa.ru/api/user/" + id);
+
+        assertResponseCodeEquals(responseAuth, 200);
+        assertJsonHasField(responseUserData, "username");
+        assertJsonHasNoField(responseUserData, "firstname");
+        assertJsonHasNoField(responseUserData, "lastname");
+        assertJsonHasNoField(responseUserData, "email");
+    }
 }
