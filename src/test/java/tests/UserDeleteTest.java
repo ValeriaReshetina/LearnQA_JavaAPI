@@ -1,12 +1,10 @@
 package tests;
 
-import io.qameta.allure.Description;
-import io.restassured.path.json.JsonPath;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.BaseTestCase;
 import lib.DataGenerator;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -16,13 +14,16 @@ import java.util.Map;
 import static lib.Assertions.assertResponseCodeEquals;
 import static lib.Assertions.assertResponseTextEquals;
 
+@Epic("Deletion cases")
 public class UserDeleteTest extends BaseTestCase {
 
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
+    @Test
+    @Feature("Deletion")
     @Description("This test is trying to DELETE user by ID 2")
     @DisplayName("Negative test for DELETE")
-    @Test
+    @Severity(SeverityLevel.MINOR)
     public void testDeleteUserById2ForEx18_1() {
         Map<String, String> userData = new HashMap<>();
         userData.put("email", "vinkotov@example.com");
@@ -40,10 +41,12 @@ public class UserDeleteTest extends BaseTestCase {
         assertResponseTextEquals(response, "Please, do not delete test users with ID 1, 2, 3, 4 or 5.");
     }
 
+    @Test
+    @Feature("Deletion")
     @Description("This test is trying to create a user, login, DELETE, " +
             "then try to get his data by ID and make sure that the user is really deleted")
     @DisplayName("Positive test for DELETE")
-    @Test
+    @Severity(SeverityLevel.NORMAL)
     public void testDeleteJustCreatedUserForEx18_2(){
         Map <String, String> userData = DataGenerator.getRegistrationData();
         Response responseCreateAuth = apiCoreRequests
@@ -72,9 +75,11 @@ public class UserDeleteTest extends BaseTestCase {
         assertResponseTextEquals(responseAfterDeletion, "User not found");
     }
 
+    @Test
+    @Feature("Deletion")
     @Description("This test is trying to DELETE user while being logged in by another user")
     @DisplayName("Negative test for DELETE")
-    @Test
+    @Severity(SeverityLevel.CRITICAL)
     public void testDeleteUserBeingLoggedInByAnotherUserForEx18_3() {
         Map<String, String> userData = new HashMap<>();
         userData.put("email", "flyingscarlett@yandex.ru");
