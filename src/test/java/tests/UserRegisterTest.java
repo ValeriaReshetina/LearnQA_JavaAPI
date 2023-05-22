@@ -1,8 +1,7 @@
 package tests;
 
-import io.qameta.allure.Description;
+import io.qameta.allure.*;
 import io.restassured.RestAssured;
-import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import lib.Assertions;
 import lib.BaseTestCase;
@@ -19,11 +18,14 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static lib.Assertions.*;
 
+@Epic("Registration cases")
 public class UserRegisterTest extends BaseTestCase {
 
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
     @Test
+    @Feature("Registration")
+    @Severity(SeverityLevel.CRITICAL)
     public void testCreateUserWithExistingEmail() {
         String email = "vinkotov@example.com";
 
@@ -42,6 +44,8 @@ public class UserRegisterTest extends BaseTestCase {
     }
 
     @Test
+    @Feature("Registration")
+    @Severity(SeverityLevel.BLOCKER)
     public void testCreateUserSuccessfully() {
         String email = DataGenerator.getRandomEmail();
 
@@ -57,9 +61,11 @@ public class UserRegisterTest extends BaseTestCase {
         assertJsonHasField(responseCreateAuth, "id");
     }
 
+    @Test
     @Description("This test checks registration w/o typing '@' symbol in user email")
     @DisplayName("Test negative registration user")
-    @Test
+    @Feature("Registration")
+    @Severity(SeverityLevel.MINOR)
     public void testCreateUserWithIncorrectEmailForEx15_1() {
         String email = "vinkotovexample.com";
         String url = "https://playground.learnqa.ru/api/user";
@@ -75,6 +81,8 @@ public class UserRegisterTest extends BaseTestCase {
 
     @Description("This test checks registration w/o sending one of necessary fields")
     @DisplayName("Test negative registration user")
+    @Feature("Registration")
+    @Severity(SeverityLevel.CRITICAL)
     @ParameterizedTest
     @ValueSource(strings = {"email", "password", "username", "firstName", "lastName"})
     public void testCreateUserWithoutFieldForEx15_2(String condition) {
@@ -106,9 +114,11 @@ public class UserRegisterTest extends BaseTestCase {
                 "The following required params are missed: " + condition);
     }
 
+    @Test
     @Description("This test checks creation of user with only one symbol in email")
     @DisplayName("Test negative registration user")
-    @Test
+    @Feature("Registration")
+    @Severity(SeverityLevel.NORMAL)
     public void testCreateUserWithOneSymbolInEmailForEx15_3() {
         String email = "a";
         String url = "https://playground.learnqa.ru/api/user";
@@ -122,9 +132,11 @@ public class UserRegisterTest extends BaseTestCase {
         Assertions.assertResponseTextEquals(response, "The value of 'email' field is too short");
     }
 
+    @Test
     @Description("This test checks creation of user with a very long username, longer than 250 symbols")
     @DisplayName("Test negative registration user")
-    @Test
+    @Feature("Registration")
+    @Severity(SeverityLevel.NORMAL)
     public void testCreateUserWithLongUsernameForEx15_4() {
         String email = "Сложно представить аналогию абстрактного класса в реальной жизни. " +
                 "Обычно класс является моделью какой-нибудь сущности. " +
@@ -142,8 +154,11 @@ public class UserRegisterTest extends BaseTestCase {
         Assertions.assertResponseTextEquals(response, "The value of 'email' field is too long");
     }
 
-    @Description("This test login with one user, but receives data from another")
     @Test
+    @Description("This test login with one user, but receives data from another")
+    @DisplayName("Test negative registration user")
+    @Feature("Registration")
+    @Severity(SeverityLevel.CRITICAL)
     public void testRequestOfAnotherUserDataForEx16() {
         Map<String, String> authData = new HashMap<>();
         authData.put("email", "vinkotov@example.com");

@@ -1,6 +1,6 @@
 package tests;
 
-import io.qameta.allure.Description;
+import io.qameta.allure.*;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -15,6 +15,7 @@ import java.util.Map;
 
 import static lib.Assertions.assertJsonByName;
 
+@Epic("Edition cases")
 public class UserEditTest extends BaseTestCase {
 
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
@@ -67,9 +68,11 @@ public class UserEditTest extends BaseTestCase {
         assertJsonByName(responseUserData, "firstName", newName);
     }
 
+    @Test
     @Description("This test is trying to change user data, being unauthorized")
     @DisplayName("Negative tests for PUT")
-    @Test
+    @Feature("Edition")
+    @Severity(SeverityLevel.MINOR)
     public void testRequestOfAnotherUserDataForEx17_1() {
         Map<String, String> userData = DataGenerator.getRegistrationData();
         String urlCreate = "https://playground.learnqa.ru/api/user";
@@ -98,9 +101,11 @@ public class UserEditTest extends BaseTestCase {
         assertJsonByName(responseUserData, "firstName", "learnqa");
     }
 
+    @Test
     @Description("This test is trying to change the user's data while being authorized by another user")
     @DisplayName("Negative tests for PUT")
-    @Test
+    @Feature("Edition")
+    @Severity(SeverityLevel.CRITICAL)
     public void testRequestOfAnotherUserDataForEx17_2() {
         String urlCreate = "https://playground.learnqa.ru/api/user";
 
@@ -139,10 +144,12 @@ public class UserEditTest extends BaseTestCase {
         assertJsonByName(responseUserData, "firstName", "learnqa");
     }
 
+    @Test
     @Description("This test is trying to change the user's email, " +
             "being authorized by the same user, to a new email without the symbol'@'")
     @DisplayName("Negative tests for PUT")
-    @Test
+    @Feature("Edition")
+    @Severity(SeverityLevel.TRIVIAL)
     public void testEditWrongEmailInJustCreatedTestForEx17_3(){
         Map<String, String> userData = DataGenerator.getRegistrationData();
         String urlCreate = "https://playground.learnqa.ru/api/user";
@@ -170,10 +177,12 @@ public class UserEditTest extends BaseTestCase {
         assertJsonByName(responseUserData, "email", userData.get("email"));
     }
 
+    @Test
     @Description("This test is trying to change first name of the user, being authorized by the same user, " +
             "to a very short value of one symbol")
     @DisplayName("Negative tests for PUT")
-    @Test
+    @Feature("Edition")
+    @Severity(SeverityLevel.NORMAL)
     public void testEditOfUserFirstNameToOneSymbolForEx17_4(){
         Map<String, String> userData = DataGenerator.getRegistrationData();
         String urlCreate = "https://playground.learnqa.ru/api/user";
