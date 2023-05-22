@@ -215,6 +215,7 @@ public class HomeworkTests {
                     "Mobile|No|iPhone"}, delimiter = '|')
 
     public void testUserAgentForEx13(String userAgent, String platform, String browser, String device) {
+
         Map<String, String> headers = new HashMap<>();
         headers.put("User-Agent", userAgent);
         headers.put("platform", platform);
