@@ -3,7 +3,6 @@ package examplesAndHomework;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -216,13 +215,31 @@ public class HomeworkTests {
                     "Mobile|No|iPhone"}, delimiter = '|')
 
     public void testUserAgentForEx13(String userAgent, String platform, String browser, String device) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("User-Agent", userAgent);
+        headers.put("platform", platform);
+        headers.put("browser", browser);
+        headers.put("device", device);
 
-        JsonPath jsonPath = RestAssured.given()
-                .header("User-Agent", userAgent)
-                .get("https://playground.learnqa.ru/ajax/api/user_agent_check").jsonPath();
+        JsonPath response = RestAssured
+                .given()
+                .headers(headers)
+                .get("https://playground.learnqa.ru/ajax/api/user_agent_check")
+                .jsonPath();
 
-        Assertions.assertEquals(platform, jsonPath.get("platform"));
-        Assertions.assertEquals(browser, jsonPath.get("browser"));
-        Assertions.assertEquals(device, jsonPath.get("device"));
+        String userAgentR = response.getString("user_agent");
+        String platformR = response.getString("platform");
+        String browserR = response.getString("browser");
+        String deviceR = response.getString("device");
+
+        System.out.println(userAgentR);
+        System.out.println(platformR);
+        System.out.println(browserR);
+        System.out.println(deviceR);
+
+        assertEquals(headers.get("User-Agent"), userAgentR, "header 'user_agent' is not correct");
+        assertEquals(headers.get("platform"), platformR, "header 'platform' is not correct");
+        assertEquals(response.get("browser"), browserR, "header 'browser' is not correct");
+        assertEquals(response.get("device"), deviceR, "header 'device' is not correct");
     }
 }
