@@ -3,6 +3,7 @@ package examplesAndHomework;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -215,32 +216,32 @@ public class HomeworkTests {
                     "Mobile|No|iPhone"}, delimiter = '|')
 
     public void testUserAgentForEx13(String userAgent, String platform, String browser, String device) {
-
-        Map<String, String> headers = new HashMap<>();
-        headers.put("User-Agent", userAgent);
-        headers.put("platform", platform);
-        headers.put("browser", browser);
-        headers.put("device", device);
-
-        JsonPath response = RestAssured
+        JsonPath jsonPath = RestAssured
                 .given()
-                .headers(headers)
+                .header("User-Agent", userAgent)
                 .get("https://playground.learnqa.ru/ajax/api/user_agent_check")
                 .jsonPath();
 
-        String userAgentR = response.getString("user_agent");
-        String platformR = response.getString("platform");
-        String browserR = response.getString("browser");
-        String deviceR = response.getString("device");
+        boolean platformIsCorrect = platform.equals(jsonPath.get("platform"));
+        boolean browserIsCorrect = browser.equals(jsonPath.get("browser"));
+        boolean deviceIsCorrect = device.equals(jsonPath.get("device"));
 
-        System.out.println(userAgentR);
-        System.out.println(platformR);
-        System.out.println(browserR);
-        System.out.println(deviceR);
-
-        assertEquals(headers.get("User-Agent"), userAgentR, "header 'user_agent' is not correct");
-        assertEquals(headers.get("platform"), platformR, "header 'platform' is not correct");
-        assertEquals(response.get("browser"), browserR, "header 'browser' is not correct");
-        assertEquals(response.get("device"), deviceR, "header 'device' is not correct");
+        if (platformIsCorrect == false || browserIsCorrect == false || deviceIsCorrect == false){
+            System.out.println("Current user agent: " + userAgent);
+            if (platformIsCorrect == false){
+                System.out.println("Platform value: " + jsonPath.get("platform") + " (is wrong) | Expected value: " + platform);
+            }
+            if (browserIsCorrect == false){
+                System.out.println("browser value: " + jsonPath.get("browser") + " (is wrong) | Expected value: " + browser);
+            }
+            if (deviceIsCorrect == false){
+                System.out.println("device value: " + jsonPath.get("device") + " (is wrong) | Expected value: " + device);
+            }
+            Assertions.fail("Test failed with wrong values. Check the log.");
+        }
+        else {
+            System.out.println("Current user agent: " + userAgent);
+            System.out.println("All values is correct.");
+        }
     }
 }
